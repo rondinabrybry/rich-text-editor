@@ -57,6 +57,30 @@
     --rte-line-height: 1.6;
 }
 
+/* ==================== Dark Theme Overrides ==================== */
+[data-theme="dark"] {
+    --rte-bg-color: #1f2937;
+    --rte-text-color: #ffffff;
+    --rte-border-color: #374151;
+    --rte-border-focus: #3b82f6;
+
+    --rte-toolbar-bg: #111827;
+    --rte-toolbar-border: #374151;
+
+    --rte-button-hover: #374151;
+    --rte-button-active: #4b5563;
+    --rte-button-disabled: #6b7280;
+
+    --rte-dropdown-bg: #1f2937;
+    --rte-dropdown-hover: #374151;
+
+    --rte-placeholder-color: #6b7280;
+    --rte-selection-bg: rgba(59, 130, 246, 0.3);
+
+    --rte-status-bg: #111827;
+    --rte-status-text: #9ca3af;
+}
+
 /* ==================== Container ==================== */
 .rte-container {
     display: flex;
