@@ -1,0 +1,23 @@
+{
+    "name": "rondinabrybry/rich-text-editor",
+    "description": "A modern, modular rich text editor built with pure JavaScript",
+    "type": "library",
+    "keywords": [
+        "rich-text-editor",
+        "wysiwyg",
+        "editor",
+        "text-editor",
+        "contenteditable",
+        "formatting",
+        "html-editor"
+    ],
+    "homepage": "https://github.com/rondinabrybry/rich-text-editor",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rondinabrybry",
+            "homepage": "https://github.com/rondinabrybry"
+        }
+    ],
+    "require": {}
+}
