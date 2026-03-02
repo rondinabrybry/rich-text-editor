@@ -14,7 +14,7 @@ export class HistoryPlugin {
     }
 
     init() {
-        // We override the default undo/redo commands
+        // Register commands to override core undo/redo
         this.editor.commands.register('undo', {
             execute: () => this.undo(),
             isActive: () => false,
@@ -27,8 +27,23 @@ export class HistoryPlugin {
             isEnabled: () => this.canRedo()
         });
 
-        // Listen for changes
-        this.editor.on('content:change', () => {
+        // Register toolbar items
+        this.editor.toolbarManager.registerItem('undo', {
+            type: 'button',
+            command: 'undo',
+            tooltip: 'Undo (Ctrl+Z)',
+            icon: 'undo'
+        });
+
+        this.editor.toolbarManager.registerItem('redo', {
+            type: 'button',
+            command: 'redo',
+            tooltip: 'Redo (Ctrl+Y)',
+            icon: 'redo'
+        });
+
+        // Listen for internal changes
+        this.editor.events.on('content:change', () => {
             this.record();
         });
 
@@ -55,7 +70,7 @@ export class HistoryPlugin {
      * Take an immediate snapshot
      */
     snapshot() {
-        const html = this.editor.getContent();
+        const html = this.editor.data.getContent();
 
         // If same as current, ignore
         if (this.position > -1 && this.stack[this.position] === html) {
@@ -74,7 +89,8 @@ export class HistoryPlugin {
             this.position++;
         }
 
-        // Update button states if possible (via events or checking command state)
+        // Trigger UI update for toolbar button states
+        this.editor.toolbarManager.updateStates();
     }
 
     undo() {
@@ -82,8 +98,9 @@ export class HistoryPlugin {
             this.isLocked = true;
             this.position--;
             const html = this.stack[this.position];
-            this.editor.setContent(html);
+            this.editor.data.setContent(html, false); // Don't sanitize when restoring from history
             this.isLocked = false;
+            this.editor.toolbarManager.updateStates();
         }
     }
 
@@ -92,8 +109,9 @@ export class HistoryPlugin {
             this.isLocked = true;
             this.position++;
             const html = this.stack[this.position];
-            this.editor.setContent(html);
+            this.editor.data.setContent(html, false); // Don't sanitize when restoring from history
             this.isLocked = false;
+            this.editor.toolbarManager.updateStates();
         }
     }
 

@@ -18,7 +18,7 @@ export class ToolbarManager {
             'bulletList', 'orderedList', '|',
             'indent', 'outdent', '|',
             'alignLeft', 'alignCenter', 'alignRight', '|',
-            'horizontalRule', 'link', 'image', '|',
+            'horizontalRule', 'link', 'image', 'clearFormatting', '|',
             'undo', 'redo'
         ];
 

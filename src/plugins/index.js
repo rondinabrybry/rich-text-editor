@@ -9,6 +9,7 @@ export { StrikethroughPlugin } from './formatting/strikethrough.plugin.js';
 export { ColorPlugin } from './formatting/color.plugin.js';
 export { BlockFormatPlugin } from './formatting/block-format.plugin.js';
 export { AlignmentPlugin } from './formatting/alignment.plugin.js';
+export { ClearFormatPlugin } from './formatting/clear-format.plugin.js';
 export { ListPlugin } from './structure/list.plugin.js';
 export { IndentPlugin } from './structure/indent.plugin.js';
 export { HRPlugin } from './structure/hr.plugin.js';

@@ -9,6 +9,7 @@ import {
     ColorPlugin, BlockFormatPlugin, AlignmentPlugin,
     ListPlugin, IndentPlugin, HRPlugin, QuotePlugin, CodeBlockPlugin,
     LinkPlugin, ImagePlugin,
+    HistoryPlugin, ClearFormatPlugin,
     FontFamilyPlugin, FontSizePlugin
 } from '../plugins/index.js';
 
@@ -176,26 +177,6 @@ export class RTE {
     registerCoreCommands() {
         // Basic movement and editor-level commands could go here
         // (Most formatting is now handled by plugins)
-
-        // Undo/Redo
-        this.commands.register('undo', {
-            execute: () => document.execCommand('undo', false, null),
-            isActive: () => false,
-            isEnabled: () => document.queryCommandEnabled('undo')
-        });
-
-        this.commands.register('redo', {
-            execute: () => document.execCommand('redo', false, null),
-            isActive: () => false,
-            isEnabled: () => document.queryCommandEnabled('redo')
-        });
-
-        // Clear formatting
-        this.commands.register('clearFormatting', {
-            execute: () => document.execCommand('removeFormat', false, null),
-            isActive: () => false
-        });
-
     }
 
     /**
@@ -304,6 +285,10 @@ export class RTE {
                 case 'y':
                     e.preventDefault();
                     this.commands.execute('redo');
+                    break;
+                case '\\':
+                    e.preventDefault();
+                    this.commands.execute('clearFormatting');
                     break;
             }
         }
@@ -562,6 +547,8 @@ export class RTE {
         this.plugins.register('codeBlock', CodeBlockPlugin);
         this.plugins.register('link', LinkPlugin);
         this.plugins.register('image', ImagePlugin);
+        this.plugins.register('history', HistoryPlugin);
+        this.plugins.register('clearFormatting', ClearFormatPlugin);
         this.plugins.register('fontFamily', FontFamilyPlugin);
         this.plugins.register('fontSize', FontSizePlugin);
     }
@@ -574,7 +561,7 @@ export class RTE {
             'bold', 'italic', 'underline', 'strikethrough',
             'color', 'blockFormat', 'alignment',
             'list', 'indent', 'hr', 'quote', 'codeBlock',
-            'link', 'image',
+            'link', 'image', 'history', 'clearFormatting',
             'fontFamily', 'fontSize'
         ];
     }
