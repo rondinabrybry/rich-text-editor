@@ -1,0 +1,641 @@
+/**
+ * RTE - Rich Text Editor
+ * A modular, CKEditor-like rich text editor built with pure JavaScript
+ */
+
+/* ==================== CSS Variables ==================== */
+@import './advanced.css';
+
+:root {
+    /* Colors */
+    --rte-primary-color: #3b82f6;
+    --rte-primary-hover: #2563eb;
+    --rte-primary-light: #dbeafe;
+
+    --rte-bg-color: #ffffff;
+    --rte-text-color: #1f2937;
+    --rte-border-color: #e5e7eb;
+    --rte-border-focus: #3b82f6;
+
+    --rte-toolbar-bg: #f9fafb;
+    --rte-toolbar-border: #e5e7eb;
+
+    --rte-button-bg: transparent;
+    --rte-button-hover: #e5e7eb;
+    --rte-button-active: #dbeafe;
+    --rte-button-disabled: #9ca3af;
+
+    --rte-dropdown-bg: #ffffff;
+    --rte-dropdown-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --rte-dropdown-hover: #f3f4f6;
+
+    --rte-placeholder-color: #9ca3af;
+    --rte-selection-bg: #bfdbfe;
+
+    --rte-status-bg: #f9fafb;
+    --rte-status-text: #6b7280;
+
+    /* Spacing */
+    --rte-spacing-xs: 4px;
+    --rte-spacing-sm: 8px;
+    --rte-spacing-md: 12px;
+    --rte-spacing-lg: 16px;
+    --rte-spacing-xl: 24px;
+
+    /* Border Radius */
+    --rte-radius-sm: 4px;
+    --rte-radius-md: 6px;
+    --rte-radius-lg: 8px;
+
+    /* Transitions */
+    --rte-transition-fast: 150ms ease;
+    --rte-transition-normal: 200ms ease;
+
+    /* Typography */
+    --rte-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --rte-font-size: 16px;
+    --rte-line-height: 1.6;
+}
+
+/* ==================== Container ==================== */
+.rte-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--rte-border-color);
+    border-radius: var(--rte-radius-lg);
+    background-color: var(--rte-bg-color);
+    font-family: var(--rte-font-family);
+    overflow: hidden;
+    transition: border-color var(--rte-transition-normal), box-shadow var(--rte-transition-normal);
+}
+
+.rte-container.rte-focused {
+    border-color: var(--rte-border-focus);
+    box-shadow: 0 0 0 3px var(--rte-primary-light);
+}
+
+.rte-container.rte-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    border-radius: 0;
+    border: none;
+}
+
+/* ==================== Toolbar ==================== */
+.rte-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rte-spacing-xs);
+    padding: var(--rte-spacing-sm);
+    background-color: var(--rte-toolbar-bg);
+    border-bottom: 1px solid var(--rte-toolbar-border);
+}
+
+.rte-toolbar-separator {
+    width: 1px;
+    height: 24px;
+    background-color: var(--rte-border-color);
+    margin: 0 var(--rte-spacing-xs);
+}
+
+/* ==================== Toolbar Buttons ==================== */
+.rte-toolbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: var(--rte-radius-sm);
+    background-color: var(--rte-button-bg);
+    color: var(--rte-text-color);
+    cursor: pointer;
+    transition: background-color var(--rte-transition-fast), color var(--rte-transition-fast);
+}
+
+.rte-toolbar-button:hover:not(:disabled) {
+    background-color: var(--rte-button-hover);
+}
+
+.rte-toolbar-button.rte-button-active {
+    background-color: var(--rte-button-active);
+    color: var(--rte-primary-color);
+}
+
+.rte-toolbar-button:disabled,
+.rte-toolbar-button.rte-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rte-toolbar-button svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.rte-dropdown-trigger svg:last-child {
+    width: 12px;
+    height: 12px;
+    margin-left: 2px;
+}
+
+/* ==================== Dropdown ==================== */
+.rte-toolbar-dropdown {
+    position: relative;
+}
+
+.rte-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    min-width: 150px;
+    margin-top: var(--rte-spacing-xs);
+    padding: var(--rte-spacing-xs) 0;
+    background-color: var(--rte-dropdown-bg);
+    border: 1px solid var(--rte-border-color);
+    border-radius: var(--rte-radius-md);
+    box-shadow: var(--rte-dropdown-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity var(--rte-transition-fast), transform var(--rte-transition-fast), visibility var(--rte-transition-fast);
+}
+
+.rte-toolbar-dropdown.rte-dropdown-open .rte-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.rte-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: var(--rte-spacing-sm) var(--rte-spacing-md);
+    border: none;
+    background: none;
+    text-align: left;
+    color: var(--rte-text-color);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color var(--rte-transition-fast);
+}
+
+.rte-dropdown-item:hover {
+    background-color: var(--rte-dropdown-hover);
+}
+
+.rte-dropdown-item.rte-active {
+    background-color: var(--rte-primary-light);
+    color: var(--rte-primary-color);
+}
+
+/* ==================== Color Picker ==================== */
+.rte-color-picker-wrapper {
+    display: inline-flex;
+    position: relative;
+}
+
+.rte-color-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ==================== Content Area ==================== */
+.rte-content-wrapper {
+    flex: 1;
+    overflow: auto;
+}
+
+.rte-content {
+    min-height: 200px;
+    padding: var(--rte-spacing-lg);
+    font-size: var(--rte-font-size);
+    line-height: var(--rte-line-height);
+    color: var(--rte-text-color);
+    outline: none;
+}
+
+.rte-content:focus {
+    outline: none;
+}
+
+/* Placeholder */
+.rte-content.rte-empty::before {
+    content: attr(data-placeholder);
+    color: var(--rte-placeholder-color);
+    pointer-events: none;
+    position: absolute;
+}
+
+.rte-content:focus.rte-empty::before {
+    content: '';
+}
+
+/* Selection styling */
+.rte-content ::selection {
+    background-color: var(--rte-selection-bg);
+}
+
+/* ==================== Content Styling ==================== */
+.rte-content p {
+    margin: 0 0 1em 0;
+}
+
+.rte-content p:last-child {
+    margin-bottom: 0;
+}
+
+.rte-content h1,
+.rte-content h2,
+.rte-content h3,
+.rte-content h4,
+.rte-content h5,
+.rte-content h6 {
+    margin: 0 0 0.5em 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.rte-content h1 {
+    font-size: 2em;
+}
+
+.rte-content h2 {
+    font-size: 1.5em;
+}
+
+.rte-content h3 {
+    font-size: 1.25em;
+}
+
+.rte-content h4 {
+    font-size: 1.1em;
+}
+
+.rte-content h5 {
+    font-size: 1em;
+}
+
+.rte-content h6 {
+    font-size: 0.9em;
+}
+
+.rte-content a {
+    color: var(--rte-primary-color);
+    text-decoration: underline;
+}
+
+.rte-content a:hover {
+    color: var(--rte-primary-hover);
+}
+
+.rte-content ul,
+.rte-content ol {
+    margin: 0 0 1em 0;
+    padding-left: 2em;
+}
+
+.rte-content li {
+    margin-bottom: 0.25em;
+}
+
+.rte-content blockquote {
+    margin: 0 0 1em 0;
+    padding: var(--rte-spacing-md) var(--rte-spacing-lg);
+    border-left: 4px solid var(--rte-primary-color);
+    background-color: var(--rte-toolbar-bg);
+    font-style: italic;
+}
+
+.rte-content pre {
+    margin: 0 0 1em 0;
+    padding: var(--rte-spacing-md);
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-radius: var(--rte-radius-md);
+    overflow-x: auto;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.rte-content code {
+    padding: 0.2em 0.4em;
+    background-color: var(--rte-toolbar-bg);
+    border-radius: var(--rte-radius-sm);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.rte-content pre code {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+}
+
+.rte-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--rte-radius-sm);
+}
+
+.rte-content hr {
+    margin: 1.5em 0;
+    border: none;
+    border-top: 2px solid var(--rte-border-color);
+}
+
+.rte-content table {
+    width: 100%;
+    margin: 0 0 1em 0;
+    border-collapse: collapse;
+}
+
+.rte-content th,
+.rte-content td {
+    padding: var(--rte-spacing-sm) var(--rte-spacing-md);
+    border: 1px solid var(--rte-border-color);
+    text-align: left;
+}
+
+.rte-content th {
+    background-color: var(--rte-toolbar-bg);
+    font-weight: 600;
+}
+
+/* ==================== Status Bar ==================== */
+.rte-status-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--rte-spacing-xs) var(--rte-spacing-md);
+    background-color: var(--rte-status-bg);
+    border-top: 1px solid var(--rte-border-color);
+    font-size: 12px;
+    color: var(--rte-status-text);
+}
+
+/* ==================== Source Code View ==================== */
+.rte-source-view {
+    display: none;
+    width: 100%;
+    min-height: 200px;
+    padding: var(--rte-spacing-md);
+    border: none;
+    background-color: #1f2937;
+    color: #f9fafb;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.rte-container.rte-source-mode .rte-content {
+    display: none;
+}
+
+.rte-container.rte-source-mode .rte-source-view {
+    display: block;
+}
+
+/* ==================== Modal ==================== */
+.rte-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--rte-transition-normal), visibility var(--rte-transition-normal);
+}
+
+.rte-modal-overlay.rte-modal-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rte-modal {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    background-color: var(--rte-bg-color);
+    border-radius: var(--rte-radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform var(--rte-transition-normal);
+}
+
+.rte-modal-overlay.rte-modal-open .rte-modal {
+    transform: scale(1);
+}
+
+.rte-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--rte-spacing-md) var(--rte-spacing-lg);
+    border-bottom: 1px solid var(--rte-border-color);
+}
+
+.rte-modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--rte-text-color);
+}
+
+.rte-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--rte-text-color);
+    cursor: pointer;
+    border-radius: var(--rte-radius-sm);
+    transition: background-color var(--rte-transition-fast);
+}
+
+.rte-modal-close:hover {
+    background-color: var(--rte-button-hover);
+}
+
+.rte-modal-body {
+    padding: var(--rte-spacing-lg);
+    overflow-y: auto;
+}
+
+.rte-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--rte-spacing-sm);
+    padding: var(--rte-spacing-md) var(--rte-spacing-lg);
+    border-top: 1px solid var(--rte-border-color);
+    background-color: var(--rte-toolbar-bg);
+}
+
+/* ==================== Form Elements ==================== */
+.rte-form-group {
+    margin-bottom: var(--rte-spacing-md);
+}
+
+.rte-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.rte-form-label {
+    display: block;
+    margin-bottom: var(--rte-spacing-xs);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--rte-text-color);
+}
+
+.rte-form-input,
+.rte-form-select,
+.rte-form-textarea {
+    width: 100%;
+    padding: var(--rte-spacing-sm) var(--rte-spacing-md);
+    border: 1px solid var(--rte-border-color);
+    border-radius: var(--rte-radius-md);
+    font-size: 14px;
+    color: var(--rte-text-color);
+    background-color: var(--rte-bg-color);
+    transition: border-color var(--rte-transition-fast), box-shadow var(--rte-transition-fast);
+}
+
+.rte-form-input:focus,
+.rte-form-select:focus,
+.rte-form-textarea:focus {
+    outline: none;
+    border-color: var(--rte-primary-color);
+    box-shadow: 0 0 0 3px var(--rte-primary-light);
+}
+
+.rte-form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--rte-spacing-sm);
+}
+
+.rte-form-checkbox input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* ==================== Buttons ==================== */
+.rte-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--rte-spacing-sm) var(--rte-spacing-lg);
+    border: 1px solid transparent;
+    border-radius: var(--rte-radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color var(--rte-transition-fast), border-color var(--rte-transition-fast), color var(--rte-transition-fast);
+}
+
+.rte-btn-primary {
+    background-color: var(--rte-primary-color);
+    color: #ffffff;
+}
+
+.rte-btn-primary:hover {
+    background-color: var(--rte-primary-hover);
+}
+
+.rte-btn-secondary {
+    background-color: transparent;
+    border-color: var(--rte-border-color);
+    color: var(--rte-text-color);
+}
+
+.rte-btn-secondary:hover {
+    background-color: var(--rte-button-hover);
+}
+
+/* ==================== Tooltip ==================== */
+.rte-tooltip {
+    position: fixed;
+    z-index: 10001;
+    padding: var(--rte-spacing-xs) var(--rte-spacing-sm);
+    background-color: #1f2937;
+    color: #ffffff;
+    font-size: 12px;
+    border-radius: var(--rte-radius-sm);
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--rte-transition-fast), transform var(--rte-transition-fast);
+}
+
+.rte-tooltip.rte-tooltip-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+    .rte-toolbar {
+        gap: 2px;
+        padding: var(--rte-spacing-xs);
+    }
+
+    .rte-toolbar-button {
+        width: 28px;
+        height: 28px;
+    }
+
+    .rte-toolbar-separator {
+        margin: 0 2px;
+    }
+
+    .rte-content {
+        padding: var(--rte-spacing-md);
+    }
+
+    .rte-modal {
+        width: 95%;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+
+    .rte-toolbar,
+    .rte-status-bar {
+        display: none !important;
+    }
+
+    .rte-container {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .rte-content {
+        padding: 0 !important;
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "rte-package",
+    "version": "1.0.0",
+    "description": "A modern, modular rich text editor built with pure JavaScript",
+    "main": "src/index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "npx serve .",
+        "test": "echo \"No tests yet\" && exit 0"
+    },
+    "keywords": [
+        "rich-text-editor",
+        "wysiwyg",
+        "editor",
+        "text-editor",
+        "contenteditable",
+        "formatting",
+        "html-editor"
+    ],
+    "author": "",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "devDependencies": {},
+    "dependencies": {}
+}

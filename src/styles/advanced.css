@@ -1,0 +1,118 @@
+/* Dark Theme Variables */
+[data-theme="dark"] {
+    --rte-bg: #1f2937;
+    --rte-text: #f3f4f6;
+    --rte-border: #374151;
+    --rte-toolbar-bg: #111827;
+    --rte-hover-bg: #374151;
+    --rte-active-bg: #4b5563;
+    --rte-modal-bg: #1f2937;
+    --rte-overlay-bg: rgba(0, 0, 0, 0.7);
+    --rte-scrollbar-thumb: #4b5563;
+    --rte-scrollbar-track: #1f2937;
+    --rte-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure editor uses these variables if not already */
+.rte-container {
+    background-color: var(--rte-bg, #ffffff);
+    border-color: var(--rte-border, #e5e7eb);
+    color: var(--rte-text, #1f2937);
+    caret-color: var(--rte-text, #1f2937);
+    /* Add this */
+}
+
+.rte-toolbar {
+    background-color: var(--rte-toolbar-bg, #f9fafb);
+    border-bottom-color: var(--rte-border, #e5e7eb);
+}
+
+.rte-toolbar-button {
+    color: var(--rte-text, #374151);
+}
+
+.rte-toolbar-button:hover:not(:disabled) {
+    background-color: var(--rte-hover-bg, #e5e7eb);
+}
+
+.rte-toolbar-button.active {
+    background-color: var(--rte-active-bg, #dbeafe);
+    color: var(--rte-primary-color, #3b82f6);
+}
+
+.rte-content {
+    color: var(--rte-text, #1f2937);
+}
+
+/* Modal Dark Mode */
+.rte-modal {
+    background-color: var(--rte-modal-bg, #ffffff);
+    color: var(--rte-text, #1f2937);
+    box-shadow: var(--rte-shadow, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+.rte-form-input,
+.rte-form-textarea,
+.rte-form-select {
+    background-color: var(--rte-bg, #ffffff);
+    border-color: var(--rte-border, #d1d5db);
+    color: var(--rte-text, #1f2937);
+}
+
+.rte-form-input:focus {
+    border-color: var(--rte-primary-color, #3b82f6);
+    background-color: var(--rte-bg, #ffffff);
+}
+
+/* Dropdown Dark Mode */
+.rte-dropdown-menu {
+    background-color: var(--rte-modal-bg, #ffffff);
+    border-color: var(--rte-border, #e5e7eb);
+    color: var(--rte-text, #374151);
+}
+
+.rte-dropdown-item {
+    color: var(--rte-text, #374151);
+}
+
+.rte-dropdown-item:hover:not(:disabled) {
+    background-color: var(--rte-hover-bg, #f3f4f6);
+}
+
+.rte-dropdown-separator {
+    background-color: var(--rte-border, #e5e7eb) !important;
+}
+
+/* Fullscreen Mode */
+.rte-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    border-radius: 0;
+    margin: 0;
+}
+
+.rte-fullscreen .rte-content {
+    height: calc(100vh - 42px - 24px);
+    /* Toolbar height + status bar */
+    max-height: none;
+}
+
+/* Source View */
+.rte-source-view {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 15px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: var(--rte-bg, #ffffff);
+    color: var(--rte-text, #1f2937);
+}
