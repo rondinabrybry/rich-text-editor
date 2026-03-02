@@ -14,10 +14,11 @@ export class ToolbarManager {
         // Default toolbar configuration
         this.defaultConfig = [
             'bold', 'italic', 'underline', 'strikethrough', '|',
-            'heading', '|',
+            'heading', 'blockquote', 'codeBlock', '|',
             'bulletList', 'orderedList', '|',
+            'indent', 'outdent', '|',
             'alignLeft', 'alignCenter', 'alignRight', '|',
-            'link', 'image', '|',
+            'horizontalRule', 'link', 'image', '|',
             'undo', 'redo'
         ];
 

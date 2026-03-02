@@ -7,6 +7,7 @@ import { ToolbarManager } from './toolbar-manager.js';
 import {
     BoldPlugin, ItalicPlugin, UnderlinePlugin, StrikethroughPlugin,
     ColorPlugin, BlockFormatPlugin, AlignmentPlugin,
+    ListPlugin, IndentPlugin, HRPlugin, QuotePlugin, CodeBlockPlugin,
     FontFamilyPlugin, FontSizePlugin
 } from '../plugins/index.js';
 
@@ -175,50 +176,6 @@ export class RTE {
         // Basic movement and editor-level commands could go here
         // (Most formatting is now handled by plugins)
 
-        // Blockquote
-        this.commands.register('blockquote', {
-            execute: () => document.execCommand('formatBlock', false, 'blockquote'),
-            isActive: () => this.selection.isWithinTag('blockquote')
-        });
-
-        // Code block
-        this.commands.register('codeBlock', {
-            execute: () => document.execCommand('formatBlock', false, 'pre'),
-            isActive: () => this.selection.isWithinTag('pre')
-        });
-
-        // Horizontal rule
-        this.commands.register('horizontalRule', {
-            execute: () => document.execCommand('insertHorizontalRule', false, null),
-            isActive: () => false
-        });
-
-        // Lists
-        this.commands.register('bulletList', {
-            execute: () => document.execCommand('insertUnorderedList', false, null),
-            isActive: () => document.queryCommandState('insertUnorderedList')
-        });
-
-        this.commands.register('orderedList', {
-            execute: () => document.execCommand('insertOrderedList', false, null),
-            isActive: () => document.queryCommandState('insertOrderedList')
-        });
-
-        this.commands.register('indent', {
-            execute: () => document.execCommand('indent', false, null),
-            isActive: () => false
-        });
-
-        this.commands.register('outdent', {
-            execute: () => document.execCommand('outdent', false, null),
-            isActive: () => false
-        });
-
-        this.commands.register('outdent', {
-            execute: () => document.execCommand('outdent', false, null),
-            isActive: () => false
-        });
-
         // Undo/Redo
         this.commands.register('undo', {
             execute: () => document.execCommand('undo', false, null),
@@ -319,6 +276,17 @@ export class RTE {
     handleKeydown(e) {
         const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
         const modifier = isMac ? e.metaKey : e.ctrlKey;
+
+        // Handle structural shortcuts (Indent/Outdent)
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            if (e.shiftKey) {
+                this.commands.execute('outdent');
+            } else {
+                this.commands.execute('indent');
+            }
+            return;
+        }
 
         if (modifier) {
             switch (e.key.toLowerCase()) {
@@ -622,6 +590,11 @@ export class RTE {
         this.plugins.register('color', ColorPlugin);
         this.plugins.register('blockFormat', BlockFormatPlugin);
         this.plugins.register('alignment', AlignmentPlugin);
+        this.plugins.register('list', ListPlugin);
+        this.plugins.register('indent', IndentPlugin);
+        this.plugins.register('hr', HRPlugin);
+        this.plugins.register('quote', QuotePlugin);
+        this.plugins.register('codeBlock', CodeBlockPlugin);
         this.plugins.register('fontFamily', FontFamilyPlugin);
         this.plugins.register('fontSize', FontSizePlugin);
     }
@@ -633,6 +606,7 @@ export class RTE {
         return [
             'bold', 'italic', 'underline', 'strikethrough',
             'color', 'blockFormat', 'alignment',
+            'list', 'indent', 'hr', 'quote', 'codeBlock',
             'fontFamily', 'fontSize'
         ];
     }
