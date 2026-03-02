@@ -67,14 +67,15 @@ export class CommandManager {
     /**
      * Check if a command is active (e.g., bold is active when cursor is in bold text)
      * @param {string} name - Command name
+     * @param {*} value - Optional value to check against
      * @returns {boolean}
      */
-    isActive(name) {
+    isActive(name, value = null) {
         const command = this.commands.get(name);
         if (!command) return false;
 
         try {
-            return command.isActive();
+            return command.isActive(value);
         } catch (error) {
             return false;
         }
@@ -83,17 +84,31 @@ export class CommandManager {
     /**
      * Check if a command is enabled
      * @param {string} name - Command name
+     * @param {*} value - Optional value to check against
      * @returns {boolean}
      */
-    isEnabled(name) {
+    isEnabled(name, value = null) {
         const command = this.commands.get(name);
         if (!command) return false;
 
         try {
-            return command.isEnabled();
+            return command.isEnabled(value);
         } catch (error) {
             return false;
         }
+    }
+
+    /**
+     * Get state of a specific command
+     * @param {string} name - Command name
+     * @param {*} value - Optional value to check against
+     * @returns {Object} { active: boolean, enabled: boolean }
+     */
+    getState(name, value = null) {
+        return {
+            active: this.isActive(name, value),
+            enabled: this.isEnabled(name, value)
+        };
     }
 
     /**

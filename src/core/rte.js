@@ -77,7 +77,6 @@ export class RTE {
         this.createDOM();
         this.registerCoreCommands();
         this.bindEvents();
-        this.initToolbar();
 
         // Register default plugins
         this.registerDefaultPlugins();
@@ -85,9 +84,12 @@ export class RTE {
         // Load plugins
         const pluginsToLoad = this.options.plugins.length > 0
             ? this.options.plugins
-            : this.getDefaultPluginsList();
+            : RTE.getDefaultPluginsList();
 
         this.plugins.initAll(pluginsToLoad);
+
+        // Initialize toolbar after plugins so commands are available
+        this.initToolbar();
 
         // Set initial content
         if (this.originalElement.tagName === 'TEXTAREA') {
@@ -556,7 +558,7 @@ export class RTE {
     /**
      * Get list of plugins to load by default
      */
-    getDefaultPluginsList() {
+    static getDefaultPluginsList() {
         return [
             'bold', 'italic', 'underline', 'strikethrough',
             'color', 'blockFormat', 'alignment',

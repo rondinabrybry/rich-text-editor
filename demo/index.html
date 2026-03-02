@@ -358,25 +358,19 @@
             ]
         });
 
-        // Register plugins
-        editor.plugins.register('link', LinkPlugin);
-        editor.plugins.register('image', ImagePlugin);
+        // Register and initialize additional plugins not in core
         editor.plugins.register('video', VideoPlugin);
         editor.plugins.register('table', TablePlugin);
-        editor.plugins.register('color', ColorPlugin);
-        editor.plugins.register('history', HistoryPlugin);
-        editor.plugins.register('fontFamily', FontFamilyPlugin);
-        editor.plugins.register('fontSize', FontSizePlugin);
         editor.plugins.register('searchReplace', SearchReplacePlugin);
         editor.plugins.register('sourceView', SourceViewPlugin);
         editor.plugins.register('fullscreen', FullscreenPlugin);
 
-        // Initialize plugins
         editor.plugins.initAll([
-            'link', 'image', 'video', 'table', 'color',
-            'history', 'fontFamily', 'fontSize', 'searchReplace',
-            'sourceView', 'fullscreen'
+            'video', 'table', 'searchReplace', 'sourceView', 'fullscreen'
         ]);
+
+        // Note: Core plugins (bold, italic, list, link, image, color, etc.) 
+        // are automatically registered and initialized by the RTE core.
 
         // Set some initial content
         editor.setContent(`
