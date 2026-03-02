@@ -6,7 +6,8 @@ import { DataManager } from './data-manager.js';
 import { ToolbarManager } from './toolbar-manager.js';
 import {
     BoldPlugin, ItalicPlugin, UnderlinePlugin, StrikethroughPlugin,
-    ColorPlugin, FontFamilyPlugin, FontSizePlugin
+    ColorPlugin, BlockFormatPlugin, AlignmentPlugin,
+    FontFamilyPlugin, FontSizePlugin
 } from '../plugins/index.js';
 
 /**
@@ -174,18 +175,6 @@ export class RTE {
         // Basic movement and editor-level commands could go here
         // (Most formatting is now handled by plugins)
 
-        // Headings
-        this.commands.register('heading', {
-            execute: (value) => document.execCommand('formatBlock', false, value),
-            isActive: () => false
-        });
-
-        // Paragraph
-        this.commands.register('paragraph', {
-            execute: () => document.execCommand('formatBlock', false, 'p'),
-            isActive: () => false
-        });
-
         // Blockquote
         this.commands.register('blockquote', {
             execute: () => document.execCommand('formatBlock', false, 'blockquote'),
@@ -225,25 +214,9 @@ export class RTE {
             isActive: () => false
         });
 
-        // Alignment
-        this.commands.register('alignLeft', {
-            execute: () => document.execCommand('justifyLeft', false, null),
-            isActive: () => document.queryCommandState('justifyLeft')
-        });
-
-        this.commands.register('alignCenter', {
-            execute: () => document.execCommand('justifyCenter', false, null),
-            isActive: () => document.queryCommandState('justifyCenter')
-        });
-
-        this.commands.register('alignRight', {
-            execute: () => document.execCommand('justifyRight', false, null),
-            isActive: () => document.queryCommandState('justifyRight')
-        });
-
-        this.commands.register('alignJustify', {
-            execute: () => document.execCommand('justifyFull', false, null),
-            isActive: () => document.queryCommandState('justifyFull')
+        this.commands.register('outdent', {
+            execute: () => document.execCommand('outdent', false, null),
+            isActive: () => false
         });
 
         // Undo/Redo
@@ -364,6 +337,30 @@ export class RTE {
                 case 'k':
                     e.preventDefault();
                     this.commands.execute('link');
+                    break;
+                case '1':
+                    if (e.altKey) {
+                        e.preventDefault();
+                        this.commands.execute('heading', 'h1');
+                    }
+                    break;
+                case '2':
+                    if (e.altKey) {
+                        e.preventDefault();
+                        this.commands.execute('heading', 'h2');
+                    }
+                    break;
+                case '3':
+                    if (e.altKey) {
+                        e.preventDefault();
+                        this.commands.execute('heading', 'h3');
+                    }
+                    break;
+                case '0':
+                    if (e.altKey) {
+                        e.preventDefault();
+                        this.commands.execute('paragraph');
+                    }
                     break;
                 case 'z':
                     if (e.shiftKey) {
@@ -623,6 +620,8 @@ export class RTE {
         this.plugins.register('underline', UnderlinePlugin);
         this.plugins.register('strikethrough', StrikethroughPlugin);
         this.plugins.register('color', ColorPlugin);
+        this.plugins.register('blockFormat', BlockFormatPlugin);
+        this.plugins.register('alignment', AlignmentPlugin);
         this.plugins.register('fontFamily', FontFamilyPlugin);
         this.plugins.register('fontSize', FontSizePlugin);
     }
@@ -633,7 +632,8 @@ export class RTE {
     getDefaultPluginsList() {
         return [
             'bold', 'italic', 'underline', 'strikethrough',
-            'color', 'fontFamily', 'fontSize'
+            'color', 'blockFormat', 'alignment',
+            'fontFamily', 'fontSize'
         ];
     }
 }
