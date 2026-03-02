@@ -1,0 +1,14 @@
+export { LinkPlugin } from './media/link.plugin.js';
+export { ImagePlugin } from './media/image.plugin.js';
+export { VideoPlugin } from './media/video.plugin.js';
+export { TablePlugin } from './table/table.plugin.js';
+export { BoldPlugin } from './formatting/bold.plugin.js';
+export { ItalicPlugin } from './formatting/italic.plugin.js';
+export { UnderlinePlugin } from './formatting/underline.plugin.js';
+export { StrikethroughPlugin } from './formatting/strikethrough.plugin.js';
+export { ColorPlugin } from './formatting/color.plugin.js';
+export { FontFamilyPlugin, FontSizePlugin } from './formatting/font.plugin.js';
+export { HistoryPlugin } from './history/history.plugin.js';
+export { SearchReplacePlugin } from './utilities/search-replace.plugin.js';
+export { SourceViewPlugin } from './utilities/source-view.plugin.js';
+export { FullscreenPlugin } from './utilities/fullscreen.plugin.js';
