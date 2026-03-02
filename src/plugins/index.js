@@ -7,6 +7,8 @@ export { ItalicPlugin } from './formatting/italic.plugin.js';
 export { UnderlinePlugin } from './formatting/underline.plugin.js';
 export { StrikethroughPlugin } from './formatting/strikethrough.plugin.js';
 export { ColorPlugin } from './formatting/color.plugin.js';
+export { BlockFormatPlugin } from './formatting/block-format.plugin.js';
+export { AlignmentPlugin } from './formatting/alignment.plugin.js';
 export { FontFamilyPlugin, FontSizePlugin } from './formatting/font.plugin.js';
 export { HistoryPlugin } from './history/history.plugin.js';
 export { SearchReplacePlugin } from './utilities/search-replace.plugin.js';
