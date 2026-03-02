@@ -22,6 +22,21 @@ export class LinkPlugin {
             isActive: () => false,
             isEnabled: () => this.editor.selection.isWithinTag('a')
         });
+
+        // Register toolbar items
+        this.editor.toolbarManager.registerItem('link', {
+            type: 'button',
+            command: 'link',
+            tooltip: 'Insert Link (Ctrl+K)',
+            icon: 'link'
+        });
+
+        this.editor.toolbarManager.registerItem('unlink', {
+            type: 'button',
+            command: 'unlink',
+            tooltip: 'Remove Link',
+            icon: 'unlink'
+        });
     }
 
     /**

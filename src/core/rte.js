@@ -8,6 +8,7 @@ import {
     BoldPlugin, ItalicPlugin, UnderlinePlugin, StrikethroughPlugin,
     ColorPlugin, BlockFormatPlugin, AlignmentPlugin,
     ListPlugin, IndentPlugin, HRPlugin, QuotePlugin, CodeBlockPlugin,
+    LinkPlugin, ImagePlugin,
     FontFamilyPlugin, FontSizePlugin
 } from '../plugins/index.js';
 
@@ -195,42 +196,6 @@ export class RTE {
             isActive: () => false
         });
 
-        // Link (placeholder - will be enhanced by link plugin)
-        this.commands.register('link', {
-            execute: (url) => {
-                if (url) {
-                    document.execCommand('createLink', false, url);
-                } else {
-                    const selectedText = this.selection.getSelectedText();
-                    const linkUrl = prompt('Enter URL:', 'https://');
-                    if (linkUrl) {
-                        document.execCommand('createLink', false, linkUrl);
-                    }
-                }
-            },
-            isActive: () => this.selection.isWithinTag('a')
-        });
-
-        this.commands.register('unlink', {
-            execute: () => document.execCommand('unlink', false, null),
-            isActive: () => false,
-            isEnabled: () => this.selection.isWithinTag('a')
-        });
-
-        // Image (placeholder - will be enhanced by image plugin)
-        this.commands.register('image', {
-            execute: (src) => {
-                if (src) {
-                    document.execCommand('insertImage', false, src);
-                } else {
-                    const imageUrl = prompt('Enter image URL:', 'https://');
-                    if (imageUrl) {
-                        document.execCommand('insertImage', false, imageUrl);
-                    }
-                }
-            },
-            isActive: () => false
-        });
     }
 
     /**
@@ -595,6 +560,8 @@ export class RTE {
         this.plugins.register('hr', HRPlugin);
         this.plugins.register('quote', QuotePlugin);
         this.plugins.register('codeBlock', CodeBlockPlugin);
+        this.plugins.register('link', LinkPlugin);
+        this.plugins.register('image', ImagePlugin);
         this.plugins.register('fontFamily', FontFamilyPlugin);
         this.plugins.register('fontSize', FontSizePlugin);
     }
@@ -607,6 +574,7 @@ export class RTE {
             'bold', 'italic', 'underline', 'strikethrough',
             'color', 'blockFormat', 'alignment',
             'list', 'indent', 'hr', 'quote', 'codeBlock',
+            'link', 'image',
             'fontFamily', 'fontSize'
         ];
     }

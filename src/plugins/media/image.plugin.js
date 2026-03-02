@@ -15,6 +15,14 @@ export class ImagePlugin {
             isEnabled: () => true
         });
 
+        // Register toolbar item
+        this.editor.toolbarManager.registerItem('image', {
+            type: 'button',
+            command: 'image',
+            tooltip: 'Insert Image',
+            icon: 'image'
+        });
+
         // Image Resize Listeners
         this.editor.contentArea.addEventListener('click', (e) => this.onContentClick(e));
         // Hide overlay on blur/interactions elsewhere
